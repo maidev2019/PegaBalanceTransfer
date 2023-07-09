@@ -29,37 +29,45 @@ Design the Balance Transfer case life cycle to reflect the process that U-Plus c
 
 Configure the case life cycle with the following personas, channels, and releases.
 
-Stage		Persona		Channel				Release
-Create		CSR	User 	Portal				MLP 1
-			Customer	User Mobile App		MLP 2
- 	 		User 		Digital Messenger	MLP 2
-Approval	CSR	User 	Portal				MLP 1
-Fulfillment	 	 	 
-Approval Rejection	CSR	User Portal			MLP 1
+| Stage | Persona | Channel | Release |
+| ----- | ------- | ------- | ------- |
+|Create | CSR User | Portal | MLP 1 |
+|Create | Customer | User Mobile App | MLP 2 |
+|Create | User | Digital Messenger | MLP 2 |
+|Approval | CSR User | Portal | MLP 1 |
+|Fulfillment |  |  |  |
+|Approval Rejection | CSR User | Portal | MLP 1 |
+
+
 
 Configure the case life cycle with the following data objects, systems of record (SOR), and releases.
 
-Stage	Data object			SOR		Release
-Create	Account				Pega	MLP 1
- 		Transfer offers		Pega	MLP 1
-Approval	 	 	 
-Fulfillment	 	 	 
-Approval Rejection	 	 	
- 
+| Stage | Data object | SOR | Release |
+| ----- | ----------- | --- | ------- |
+|Create | Account | PEGA | MLP 1 |
+|Create | Transfer offers | PEGA | MLP 1 |
+|Approval |  |  |  |
+|Fulfillment |  |  |  |
+|Approval Rejection |  |  |  |
+
 Configure the case type to change the status of the case at each stage.
 
-Stage					Case status on stage entry			Resolution status
-Create					Open	 
-Approval				Pending-Approval	 
-Fulfillment				Pending-Fulfillment					Resolved-Completed
-Approval Rejection	 										Resolved-Rejected
+| Stage | Case status on stage entry | Resolution status |
+| ----- | -------------------------- | ----------------- |
+|Create | Open |  |
+|Approval | Pending-Approval |  |
+|Fulfillment | Pending-Fulfillment | Resolved-Completed |
+|Approval Rejection |  | Resolved-Rejected |
 
 Configure routing to the AcctMgmt:CSR work queue for the Approve transfer step.
 
 Configure a service-level agreement for the Approve transfer step.
-			Interval	Urgency		Action
-Goal		1 hour		20			Notify Assignee by using the default message
-Deadline	2 hours		40			Notify Assignee by using the default message
+
+|  		| Interval | Urgency | Action |
+| ----- | -------- | ------- | ------ |
+| Goal | 1 hour | 20 | Notify Assignee by using the default message |
+| Deadline | 2 hour | 40 | Notify Assignee by using the default message |
+
 
 
 ### US-001 Acceptance criteria
@@ -99,14 +107,15 @@ As a customer, I want to review all the available balance transfer offers so tha
 ### US-003 Description
 Configure the draft data object named Transfer offers to add the following fields:
 
-Field name						Field type
-Title							Text (single line)
-Description						Text (paragraph)
-Interest rate					Percentage
-Transfer fee					Percentage
-Minimum payment rate			Percentage
-APR after promotional period	Percentage
-Length of offer					Text (single line)
+| Field name | Field type |
+| ---------- | ---------- |
+| Title | Text (single line) |
+| Description | Text (paragraph) |
+| Interest rate | Percentage |
+| Transfer fee | Percentage |
+| Minimum payment rate | Percentage |
+| APR after promotional period | Percentage |
+| Length of offer | Text (single line) |
 
 Using the values in the following table, add three records to the data object to identify the offers that are available to customers:
 | Title					| Description | Interest rate | Transfer fee | Minimum payment rate | APR after promotional period | Length of offer |
@@ -139,10 +148,12 @@ As a customer, I want to identify the balances that I want to transfer from othe
 ### US-004 Description
 Configure the Identify transfers view with a list of records, Embedded data field named Transfers. Include the following fields in the Transfers data object to represent transfers authorized by customers.
 
-Field name			Field type			Options
-Account number		Text (single line)	Required
-Amount				Currency			Required
-Lender				Text (single line)	Required
+| Field name | Field type | Options		|
+| ---------- | ---------- | ----------- |
+| Account number | Text (single line) | Required |
+| Amount | Currency | Required |
+| Lender | Text (single line) | Required |
+
 
 ### US-004 Acceptance criteria
 The Transfers Embedded data field has three required fields: Account number, Amount, and Lender.
@@ -158,11 +169,12 @@ Configure the Review transfers view to display a list of transfers authorized by
 
 Configure the Review transfers view with four calculated currency fields.
 
-Field name								Expression
-Total transfer amount					Sum of the amounts in the Transfers data fields
-Transfer fee charged					Total transfer amount * Transfer fee
-Total cost of transfer					Transfer fee charged + Total transfer amount
-Minimum payment on transferred amounts	Total cost of transfer * Minimum payment rate
+| Field name | Expression |
+| ---------- | ---------- |
+| Total transfer amount | Sum of the amounts in the Transfers data fields |
+| Transfer fee charged | Total transfer amount * Transfer fee |
+| Total cost of transfer | Transfer fee charged + Total transfer amount |
+| Minimum payment on transferred amounts | Total cost of transfer * Minimum payment rate |
 
 ### US-005 Acceptance criteria
 The Review transfers view displays a read-only list of authorized transfers.
@@ -180,21 +192,20 @@ As a CSR, I want to review the transfer and customer account information so that
 Configure the view for the Approve transfer step to display the fields listed in the following table, organized into the three views identified. Entries without a listed field type are reused fields that are already defined in the data model.
 
 *Tip:* Create a new Form view for each set of details, and then add the views to the main view for the step.
+| View 		 | Field name | Field type | Additional configurations |
+| ---------- | ---------- | ---------- | ------------------------- |
+| Account details | Account number |  |  |
+| Account details | Credit limit |  |  |
+| Account details | Current balance |  |  |
+| Account details | Available credit |  |  |
+| Account details | Maximum transfer allowed |  |  |
+| Transfer details | Total cost of transfer | Currency | Calculated as maximum transfer allowed - total cost of transfer |
+| Transfer details | Remaining transfer balance available | Currency | Calculated as maximum transfer allowed - total cost of transfer |
+| Transfer details | Remaining available credit | Currency | Calculated as available credit - total cost of transfer |
+| Transfer details | Credit utilization | Percentage | Calculated as (current balance + total cost of transfer) / credit limit |
+| Approval details | Credit score | Integer | Required |
+| Approval details | Notes | Text (paragraph) | Optional |
 
-- View				Field name								Field type				Additional configurations
-- Account details		Account number	 	 
-- 					Credit limit	 	 
--					Current balance	 	 
--					Available credit	 	 
--					Maximum transfer allowed
-					
-- Transfer details	Total cost of transfer	 	 
-- 					Remaining transfer balance available	Currency				Calculated as maximum transfer allowed - total cost of transfer
--					Remaining available credit				Currency				Calculated as available credit - total cost of transfer
--					Credit utilization						Percentage				Calculated as (current balance + total cost of transfer) / credit limit
-
-- Approval details	Credit score							Integer					Required
--					Notes									Text (paragraph)		Optional
 
 ### US-006 Acceptance criteria
 The Approve transfer view displays eleven fields, separated into three groupings: Account details, Transfer details, and Approval details.
