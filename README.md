@@ -181,20 +181,20 @@ Configure the view for the Approve transfer step to display the fields listed in
 
 *Tip:* Create a new Form view for each set of details, and then add the views to the main view for the step.
 
-View				Field name								Field type				Additional configurations
-Account details		Account number	 	 
- 					Credit limit	 	 
-					Current balance	 	 
-					Available credit	 	 
-					Maximum transfer allowed
+- View				Field name								Field type				Additional configurations
+- Account details		Account number	 	 
+- 					Credit limit	 	 
+-					Current balance	 	 
+-					Available credit	 	 
+-					Maximum transfer allowed
 					
-Transfer details	Total cost of transfer	 	 
- 					Remaining transfer balance available	Currency				Calculated as maximum transfer allowed - total cost of transfer
- 					Remaining available credit				Currency				Calculated as available credit - total cost of transfer
- 					Credit utilization						Percentage				Calculated as (current balance + total cost of transfer) / credit limit
+- Transfer details	Total cost of transfer	 	 
+- 					Remaining transfer balance available	Currency				Calculated as maximum transfer allowed - total cost of transfer
+-					Remaining available credit				Currency				Calculated as available credit - total cost of transfer
+-					Credit utilization						Percentage				Calculated as (current balance + total cost of transfer) / credit limit
 
-Approval details	Credit score							Integer					Required
-					Notes									Text (paragraph)		Optional
+- Approval details	Credit score							Integer					Required
+-					Notes									Text (paragraph)		Optional
 
 ### US-006 Acceptance criteria
 The Approve transfer view displays eleven fields, separated into three groupings: Account details, Transfer details, and Approval details.
